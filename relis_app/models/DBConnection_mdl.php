@@ -504,32 +504,16 @@ class DBConnection_mdl extends CI_Model
 
 			$value = $table_config['fields'][$key];
 			if ($v_field['field_state'] != 'drill_down' and $v_field['field_state'] != 'disabled' and !((isset($value['multi-select']) and isset($value['multi-select']) == 'Yes'))) {
-				//print_test($key);
 				if (!empty($content[$key])) {
 					$val = $content[$key];
 				} else {
 					$val = NULL;
 				}
+				$sql_value = $this->get_sql_value($value, $val, $this->db3->conn_id);
 				if ($i == 0) {
-
-					if ((isset($value['input_type']) and $value['input_type'] == 'date' and empty($val)) or 
-						(isset($value['field_type']) and ($value['field_type'] == 'int' or $value['field_type'] == 'number') and empty($val))) {
-						$param .= "NULL";
-					} else {
-						$param .= "'" . mysqli_real_escape_string($this->db3->conn_id, $val ?? '') . "'";
-					}
-
-
-
+					$param .= $sql_value;
 				} else {
-					if ((isset($value['input_type']) and $value['input_type'] == 'date' and empty($val)) or 
-						(isset($value['field_type']) and ($value['field_type'] == 'int' or $value['field_type'] == 'number') and empty($val))) {
-						$param .= ", " . "NULL";
-					} else {
-						$param .= ",'" . mysqli_real_escape_string($this->db3->conn_id, $val ?? '') . "'";
-
-					}
-
+					$param .= ", " . $sql_value;
 				}
 				$i = 1;
 			}
@@ -770,4 +754,23 @@ class DBConnection_mdl extends CI_Model
 		return $result;
 
 	}
+
+    /**
+     * Helper function to generate the correct SQL value for a field.
+     * This refactoring was done to eliminate duplicated logic for handling
+     * NULL values and escaping, improving maintainability and readability.
+     *
+     * If the field is a date or an int/number and the value is empty, returns SQL NULL.
+     * Otherwise, returns the value properly escaped for SQL.
+     */
+    private function get_sql_value($value, $val, $db_conn) {
+        if (
+            (isset($value['input_type']) && $value['input_type'] == 'date' && empty($val)) ||
+            (isset($value['field_type']) && in_array($value['field_type'], ['int', 'number']) && empty($val))
+        ) {
+            return "NULL";
+        } else {
+            return "'" . mysqli_real_escape_string($db_conn, $val ?? '') . "'";
+        }
+    }
 }
