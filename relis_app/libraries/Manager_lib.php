@@ -1421,6 +1421,7 @@ class Manager_lib
 		$menu['general']['menu']['papers']['sub_menu']['screen_paper_pending'] = array('label' => 'Pending', 'url' => 'element/entity_list/list_pending_papers', '');
 		$menu['general']['menu']['papers']['sub_menu']['screen_paper_included'] = array('label' => 'Included', 'url' => 'element/entity_list/list_included_papers', '');
 		$menu['general']['menu']['papers']['sub_menu']['screen_paper_excluded'] = array('label' => 'Excluded', 'url' => 'element/entity_list/list_excluded_papers', '');
+        $menu['general']['menu']['papers']['sub_menu']['screen_paper_flagged_related'] = array('label' => 'Flagged Related', 'url' => 'element/entity_list/list_flagged_related_papers', '');
 
 		$menu['general']['menu']['venues'] = array('label' => 'Venues', 'url' => 'element/entity_list/list_venues', 'icon' => 'th');
 

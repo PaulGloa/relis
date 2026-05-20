@@ -120,6 +120,9 @@
 
 
                                     <!-- <form class="form-horizontal" action="save_screening" method="POST" onsubmit=" return  validate_screen()"> -->
+                                    <?php
+                                    echo checkbox_form_bm('Flag as related','flagged_related','flagged_related', selected: $paper_is_flagged);
+                                    ?>
                                     <div style='text-align:center' class="screen_decision">
 
                                         <button class="btn  btn-lg" type="button" onclick="include_paper()">Include</button>

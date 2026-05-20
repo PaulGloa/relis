@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS `paper` (
   `paper_excluded` int(2) NOT NULL DEFAULT '0',
   `operation_code` varchar(20) DEFAULT NULL,
   `paper_active` int(1) NOT NULL DEFAULT '1',
+  `flagged_related` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;;;;
 

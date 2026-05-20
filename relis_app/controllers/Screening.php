@@ -976,6 +976,7 @@ class Screening extends CI_Controller
             $detail_papers_sources = $this->DBConnection_mdl->get_row_details('get_detail_papers_sources', $paper_detail['papers_sources'], TRUE);
             $search_query = $detail_papers_sources['ref_search_query'] ?? '';
             $data['paper_title'] = $paper_detail['bibtexKey'] . " - " . $this->highlight_search_term($paper_detail['title'], $search_query);
+            $data['paper_is_flagged']  = $paper_detail['flagged_related'];
             // TODO: Change this screen to highlight the string
             if (in_array('Abstract', $displayed_fieds))
                 $data['paper_abstract'] = $this->highlight_search_term($paper_detail['abstract'], $search_query);
@@ -1064,6 +1065,7 @@ class Screening extends CI_Controller
             );
             //print_test($inclusion_criteria); exit;
             $this->db2->trans_start();
+            $this->db2->update('paper', array('flagged_related' => $post_arr['flagged_related']), array('id' => $post_arr['paper_id']));
             $res = $this->db2->update('screening_paper', $screening_save, array('screening_id' => $post_arr['screening_id']));
             $this->db_current->where('screening_id', $post_arr['screening_id'])->delete('screen_inclusion_mapping');
             if ($res == 1) {
