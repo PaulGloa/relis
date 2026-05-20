@@ -431,6 +431,39 @@ class Reporting extends CI_Controller
 		redirect('reporting/result_export');
 	}
 
+    public function result_export_papers_flagged_related()
+    {
+        $table_ref = "papers";
+        $this->db2 = $this->load->database(project_db(), TRUE);
+
+        $data = $this->Reporting_dataAccess->prepare_paper_export7();
+
+        $result = $data->result_array();
+        $array_header = array('#', "key", 'Title', 'Link', 'Preview', 'Abstract', 'Year');
+        array_unshift($result, $array_header);
+        try {
+            // Create a stream opening it with read / write mode
+            $f_new = fopen("cside/export_r/relis_paper_flagged_related_" . project_db() . ".csv", 'w');
+            if (!$f_new) {
+                throw new Exception('Could not open file relis_paper_flagged_related_' . project_db() . ".csv");
+            }
+            // Iterate over the data, writing each line to the text stream
+            $i = 0;
+            foreach ($result as $val) {
+                if ($i > 0) {
+                    $val['id'] = $i;
+                }
+                fputcsv($f_new, $val, get_appconfig_element('csv_field_separator_export'));
+                $i++;
+            }
+            fclose($f_new);
+            set_top_msg(lng_min('File generated'));
+        } catch (Exception $e) {
+            set_top_msg(lng_min("Error (File: " . $e->getFile() . ", line " . $e->getLine() . "): " . $e->getMessage()), 'error');
+        }
+        redirect('reporting/result_export');
+    }
+
 	public function result_export_included_papers_bib()
 	{
 		$this->result_export_papers_bib('Included');

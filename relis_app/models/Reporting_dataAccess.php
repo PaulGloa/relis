@@ -75,4 +75,11 @@ class reporting_dataAccess extends CI_Model
         $data = $this->db2->query($sql);
         return $data;
     }
+
+    function prepare_paper_export7()
+    {
+        $sql = "SELECT id,bibtexKey,title,doi,preview,abstract,year FROM  paper WHERE paper_active =1 AND flagged_related =1";
+        $data = $this->db2->query($sql);
+        return $data;
+    }
 }

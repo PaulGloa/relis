@@ -44,6 +44,7 @@
 
 	              <?php
                 $paper_filename = FCPATH . "cside/export_r/relis_paper_" . project_db() . ".csv";
+                $paper_flagged_related_filename = FCPATH . "cside/export_r/relis_paper_flagged_related" . project_db() . ".csv";
                 $paper_bib_filename = FCPATH . "cside/export_r/relis_paper_bibtex_" . project_db() . ".bib";
                 $paper_bib_filename_Included = FCPATH . "cside/export_r/relis_paper_bibtex_Included_" . project_db() . ".bib";
                 $paper_bib_filename_Excluded = FCPATH . "cside/export_r/relis_paper_bibtex_Excluded_" . project_db() . ".bib";
@@ -61,6 +62,16 @@
                 } else {
 
                   $paper_dsc = "";
+                }
+
+                if (file_exists($paper_flagged_related_filename)) {
+                    $paper_flagged_related_size = (filesize($paper_flagged_related_filename) > 1000 ? round(filesize($paper_flagged_related_filename) / 1000) : round(filesize($paper_flagged_related_filename) / 1000, 1)) . ' Kb  Last update:';
+                    $paper_flagged_related_date = date("Y-m-d h:i:s", filemtime($paper_filename));
+
+                    $paper_flagged_related_dsc = "<i class='fa fa-download'></i> Download CSV (" . $paper_size . $paper_date . ")";
+                } else {
+
+                    $paper_flagged_related_dsc = "";
                 }
 
                 if (file_exists($paper_bib_filename)) {
@@ -156,7 +167,11 @@
 	                  <td><a href="<?php echo base_url(); ?>reporting/download/relis_paper_<?php echo project_db(); ?>.csv"><?php echo  $paper_dsc ?></a></td>
 	                  <td><a href="<?php echo base_url(); ?>reporting/result_export_papers"><i class="fa fa-refresh"></i><?php echo lng('Update file') ?></a></td>
 	                </tr>
-
+                    <tr>
+                       <td>Papers Flagged Realted</td>
+                       <td><a href="<?php echo base_url(); ?>reporting/download/relis_paper_flagged_related_<?php echo project_db(); ?>.csv"><?php echo  $paper_dsc ?></a></td>
+                       <td><a href="<?php echo base_url(); ?>reporting/result_export_papers_flagged_related"><i class="fa fa-refresh"></i><?php echo lng('Update file') ?></a></td>
+                    </tr>
 
 	                <tr>
 	                  <td>Papers (BibTeX)</td>
