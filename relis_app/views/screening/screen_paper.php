@@ -121,8 +121,9 @@
 
                                     <!-- <form class="form-horizontal" action="save_screening" method="POST" onsubmit=" return  validate_screen()"> -->
                                     <?php
-                                    echo checkbox_form_bm('Flag as related','flagged_related','flagged_related', selected: $paper_is_flagged);
+                                    echo checkbox_form_bm(label: 'Flag as related', name: 'flagged_related', id: 'flagged_related', selected: $paper_is_flagged);
                                     ?>
+                                    <br />
                                     <div style='text-align:center' class="screen_decision">
 
                                         <button class="btn  btn-lg" type="button" onclick="include_paper()">Include</button>
@@ -295,7 +296,17 @@
 
                     </script>
 
-
+                    <script>
+                        $(document).ready(function() {
+                            // Rend visible la checkbox sous forme de switch vert
+                            var elem = document.querySelector('.js-switch[name="flagged_related"]');
+                            if (elem && !elem.dataSwitchery) {
+                                new Switchery(elem, {
+                                    color: '#26B99A'
+                                });
+                            }
+                        });
+                    </script>
 
 
 

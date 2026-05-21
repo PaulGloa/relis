@@ -65,6 +65,7 @@ class ScreeningUnitTest
         $this->removeScreeningValidation();
         $this->screening_4papersScreened();
         $this->screening_0paperScreened();
+        $this->saveScreening_FlaggedRelated();
     }
 
     private function TestInitialize()
@@ -2275,5 +2276,31 @@ class ScreeningUnitTest
         }
 
         run_test($this->controller, $action, $test_name, $test_aspect, $expected_value, $actual_value);
+    }
+
+    /*
+     * Test 49
+     * Action : save_screening
+     * Description : Save the screening inclusion decision made for a paper with inclusion criteria field.
+     * Expected update in DB
+     */
+    private function saveScreening_FlaggedRelated()
+    {
+        $action = "save_screening";
+        $test_name = "Save the screening decision made for a paper flagged as related";
+        $test_aspect_screening = "Screening details";
+        $expected_screening = '[{"id":"1","flagged_related":"1"}]';
+
+        $screening_paper = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".screening_paper WHERE assignment_role = 'Screening' AND screening_id = 1")->row_array();
+        $data = ["criteria_ex" => "", "criteria_in" => 1, "note" => "", "screening_id" => $screening_paper['screening_id'], "decision" => "accepted", "operation_type" => "new", "screening_phase" => $screening_paper['screening_phase'], "operation_source" => "list_screen/mine_screen", "paper_id" => $screening_paper['paper_id'], "assignment_id" => $screening_paper['screening_id'], "screen_type" => "simple_screen", "flagged_related" => 1];
+        $response = $this->http_client->response($this->controller, $action, $data, "POST");
+
+        if ($response['status_code'] >= 400) {
+            $actual_screening = "<span style='color:red'>" . $response['content'] . "</span>";
+        } else {
+            $actual_screening = json_encode($this->ci->db->query("SELECT id, flagged_related FROM relis_dev_correct_" . getProjectShortName() . ".paper WHERE id=" . $screening_paper['paper_id'])->result_array());
+        }
+
+        run_test($this->controller, $action, $test_name, $test_aspect_screening, $expected_screening, $actual_screening);
     }
 }

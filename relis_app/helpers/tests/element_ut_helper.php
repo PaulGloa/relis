@@ -135,6 +135,8 @@ class ElementUnitTest
         $this->remove_ref_variety();
         $this->remove_screen_phase();
         $this->remove_venue();
+        $this->listAllFlaggedRelatedPapers();
+        $this->listAllFlaggedRelatedPapersEmpty();
     }
 
     private function TestInitialize()
@@ -1128,6 +1130,7 @@ class ElementUnitTest
         $actual_value = "No";
 
         $response = $this->http_client->response($this->controller, $action . "/list_excluded_papers");
+        error_log("reponse: " . print_r($response, true));
 
         if ($response['status_code'] >= 400) {
             $actual_value = "<span style='color:red'>" . $response['content'] . "</span>";
@@ -3736,6 +3739,70 @@ class ElementUnitTest
             $actual_value = "<span style='color:red'>" . $response['content'] . "</span>";
         } else {
             $actual_value = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".venue WHERE venue_id = 1")->row_array()['venue_active'];
+        }
+
+        run_test($this->controller, $action, $test_name, $test_aspect, $expected_value, $actual_value);
+    }
+
+    /*
+     * Test 118
+     * Action : entity_list
+     * Description : display list of all flagged related papers
+     * Expected result: check if the flagged papers are listed
+     */
+    private function listAllFlaggedRelatedPapers()
+    {
+        $action = "entity_list";
+        $test_name = "display list of all flagged related papers";
+        $test_aspect = "Correct elements displayed?";
+        $expected_value = "Yes";
+        $actual_value = "No";
+
+        $paper = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".paper LIMIT 1")->row_array();
+        $this->ci->db->query("UPDATE relis_dev_correct_" . getProjectShortName() . ".paper SET flagged_related = 1 WHERE id = " . $paper['id']);
+
+        $response = $this->http_client->response($this->controller, $action . "/list_flagged_related_papers");
+        if ($response['status_code'] >= 400) {
+            $actual_value = "<span style='color:red'>" . $response['content'] . "</span>";
+        } else {
+            if (strstr($response['content'], $paper['bibtexKey']) != false) {
+                $actual_value = "Yes";
+            }
+        }
+
+        $this->ci->db->query("UPDATE relis_dev_correct_" . getProjectShortName() . ".paper SET flagged_related = 0 WHERE id = " . $paper['id']);
+
+        run_test($this->controller, $action, $test_name, $test_aspect, $expected_value, $actual_value);
+    }
+
+    /*
+     * Test 119
+     * Action : entity_list
+     * Description : display the list of flagged related papers when none are flagged
+     * Expected result: check if the list is empty when there is no flagged paper
+     */
+    private function listAllFlaggedRelatedPapersEmpty()
+    {
+        $action = "entity_list";
+        $test_name = "display list of flagged related papers when none are flagged";
+        $test_aspect = "Correct elements displayed?";
+        $expected_value = "Yes";
+        $actual_value = "No";
+
+        $this->ci->db->query("UPDATE relis_dev_correct_" . getProjectShortName() . ".paper SET flagged_related = 0");
+
+        $response = $this->http_client->response($this->controller, $action . "/list_flagged_related_papers");
+        if ($response['status_code'] >= 400) {
+            $actual_value = "<span style='color:red'>" . $response['content'] . "</span>";
+        } else {
+            $papers = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".paper")->result_array();
+            $actual_value = "Yes";
+            foreach ($papers as $paper) {
+                if (strstr($response['content'], $paper['bibtexKey']) != false) {
+                    $actual_value = "No";
+                    break;
+                }
+            }
         }
 
         run_test($this->controller, $action, $test_name, $test_aspect, $expected_value, $actual_value);
