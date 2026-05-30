@@ -120,9 +120,11 @@
 
 
                                     <!-- <form class="form-horizontal" action="save_screening" method="POST" onsubmit=" return  validate_screen()"> -->
-                                    <?php
-                                    echo checkbox_form_bm(label: 'Flag as related', name: 'flagged_related', id: 'flagged_related', selected: $paper_is_flagged);
-                                    ?>
+
+                                    <?php echo checkbox_form_bm(label: 'Flag the paper', name: 'flagged_paper', id: 'flagged_paper', selected: $paper_is_flagged, on_change:'flagToggleUI()'); ?>
+                                    <div id="flag_dropdown_div" style="display: <?php echo $paper_is_flagged ? 'block' : 'none'; ?>;">
+                                        <?php echo dropdown_form_bm("Flag category", "flag_category", "flag_dropdown", $flags, selected: $flag_category)?>
+                                    </div>
                                     <br />
                                     <div style='text-align:center' class="screen_decision">
 
@@ -238,35 +240,44 @@
 
                     <script>
                         function validate_screen() {
+                            const flag_checkbox = document.querySelector("#flagged_paper")
+                            const flag_dropdown = document.querySelector('#flag_dropdown')
+
+                            if (flag_checkbox.checked && $('#flag_dropdown').val() == '') {
+                                alert('You must select a flag category.')
+                                return false
+                            }
+
                             var inclusion_mode = '<? echo $inclusion_mode ?>';
                             if ($('#decision').val() == 'excluded' && $('#criteria_ex').val() == '') {
                                     alert("You must select an exclusion criterion.");
                                     return false;
-                                }else if ($('#decision').val() == 'accepted') {
-                                    switch(inclusion_mode) {
-                                        case "None" :
-                                            break;
-                                        case "One" :
-                                            if ($('#criteria_in').val() == '') {
-                                                alert("You must select an inclusion criterion.");
-                                                return false;
-                                            }
-                                            break;
-                                        case "Any" :
-                                            if (!Array.isArray($('#criteria_in').val())) {
-                                                alert("You must select at least one criterion.");
-                                                return false;
-                                            }
-                                        case "All":
-                                            var allCriteriaCheck = document.getElementById('allCriteriaCheck').checked;
-                                            if (!allCriteriaCheck) {
-                                                alert("All criteria must be valid, otherwise exclude this paper.");
-                                                return false;
-                                            } 
-                                            break;
-                                    }
-                                    return true;
+                            }else if ($('#decision').val() == 'accepted') {
+
+                                switch(inclusion_mode) {
+                                    case "None" :
+                                        break;
+                                    case "One" :
+                                        if ($('#criteria_in').val() == '') {
+                                            alert("You must select an inclusion criterion.");
+                                            return false;
+                                        }
+                                        break;
+                                    case "Any" :
+                                        if (!Array.isArray($('#criteria_in').val())) {
+                                            alert("You must select at least one criterion.");
+                                            return false;
+                                        }
+                                    case "All":
+                                        var allCriteriaCheck = document.getElementById('allCriteriaCheck').checked;
+                                        if (!allCriteriaCheck) {
+                                            alert("All criteria must be valid, otherwise exclude this paper.");
+                                            return false;
+                                        }
+                                        break;
                                 }
+                                return true;
+                            }
                         }
 
                         function include_paper() {
@@ -286,6 +297,16 @@
                             $('#decision').val('excluded');
                         }
 
+                        function flagToggleUI() {
+                            const checkbox = document.querySelector('#flagged_paper')
+                            const dropdown = document.querySelector('#flag_dropdown_div')
+
+                            if (checkbox.checked) {
+                                dropdown.style.display = 'block';
+                            } else {
+                                dropdown.style.display = 'none';
+                            }
+                        }
 
                         <?php if (!empty($content_item) and $content_item['screening_decision'] == 'Included') { ?>
                             $(document).ready(function () {
@@ -299,7 +320,7 @@
                     <script>
                         $(document).ready(function() {
                             // Rend visible la checkbox sous forme de switch vert
-                            var elem = document.querySelector('.js-switch[name="flagged_related"]');
+                            var elem = document.querySelector('.js-switch[name="flagged_paper"]');
                             if (elem && !elem.dataSwitchery) {
                                 new Switchery(elem, {
                                     color: '#26B99A'

@@ -162,7 +162,6 @@ CREATE TABLE IF NOT EXISTS `str_management` (
   PRIMARY KEY (`str_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;;;;
 
-
 -- VIEWS
 
 DROP VIEW IF EXISTS `view_paper_assigned`;;;;

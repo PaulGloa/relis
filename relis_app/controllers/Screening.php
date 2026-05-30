@@ -912,8 +912,10 @@ class Screening extends CI_Controller
         //Get screening criteria
         $exclusion_crit = $this->manager_lib->get_reference_select_values('exclusioncrieria;ref_value');
         $inclusion_crit = $this->manager_lib->get_reference_select_values('inclusioncriteria;ref_value');
+        $flags = $this->manager_lib->get_reference_select_values('flag_category;ref_value');
         $data['exclusion_criteria'] = $exclusion_crit;
         $data['inclusion_criteria'] = $inclusion_crit;
+        $data['flags'] = $flags;
         $data['inclusion_mode'] = $model->get_phase_config_value(active_screening_phase(), "screening_inclusion_mode");
         if (!empty($data['content_item'])) {
             //edit screening: used for conflict resolution
@@ -972,11 +974,21 @@ class Screening extends CI_Controller
         if (!empty($data['the_paper'])) {
             // $this->highlight_search_term($content_item['title'], $search_query);
             $paper_detail = $this->DBConnection_mdl->get_row_details('papers', $data['the_paper']);
+            $query_flag_details = $this->db_current->select('flag_category_id, flag_active')
+                ->where('paper_id', $data['the_paper'])
+                ->get('flag');
+            $flag_details = $query_flag_details->row_array();
+            if (!empty($flag_details['flag_category_id']) && !empty($flag_details['flag_active'])) {
+                $data['paper_is_flagged'] = 1;
+                $data['flag_category'] = $flag_details['flag_category_id'];
+            } else {
+                $data['paper_is_flagged'] = 0;
+                $data['flag_category'] = '';
+            }
             // fetching the search query from the `ref_papers_sources` table
             $detail_papers_sources = $this->DBConnection_mdl->get_row_details('get_detail_papers_sources', $paper_detail['papers_sources'], TRUE);
             $search_query = $detail_papers_sources['ref_search_query'] ?? '';
             $data['paper_title'] = $paper_detail['bibtexKey'] . " - " . $this->highlight_search_term($paper_detail['title'], $search_query);
-            $data['paper_is_flagged'] = $paper_detail['flagged_related'];
             // TODO: Change this screen to highlight the string
             if (in_array('Abstract', $displayed_fieds))
                 $data['paper_abstract'] = $this->highlight_search_term($paper_detail['abstract'], $search_query);
@@ -1065,7 +1077,34 @@ class Screening extends CI_Controller
             );
             //print_test($inclusion_criteria); exit;
             $this->db2->trans_start();
-            $this->db2->update('paper', array('flagged_related' => $post_arr['flagged_related']), array('id' => $post_arr['paper_id']));
+            $flag_query = $this->db2->select('id, paper_id, flag_category_id, flag_active')
+                ->where('paper_id', $post_arr['paper_id'])
+                ->get('flag');
+            $current_flag = $flag_query->row_array();
+
+            if ($post_arr['flagged_paper']) {
+                if (empty($current_flag)) {
+                    $this->db2->insert('flag', array(
+                            'paper_id' => $post_arr['paper_id'],
+                            'flag_category_id' => $post_arr['flag_category'],
+                            'added_by' => active_user_id())
+                    );
+                } else {
+                    if ($current_flag['flag_category_id'] != $post_arr['flag_category']) {
+                        $this->db2->update('flag', array(
+                            'flag_category_id' => $post_arr['flag_category'],
+                            'flag_active' => 1,
+                            //'added_by' => active_user_id(),
+                            //'timestamp' => bm_current_time('Y-m-d H:i:s')
+                        ), array('id' => $current_flag['id']));
+                    } else if ($current_flag['flag_active'] == 0) {
+                        $this->db2->update('flag', array('flag_active' => 1, 'added_by' => active_user_id(), 'timestamp' => bm_current_time('Y-m-d H:i:s')), array('id' => $current_flag['id']));
+                    }
+                }
+            } else if (!empty($current_flag)) {
+                $this->db2->update('flag', array('flag_active' => 0), array('id' => $current_flag['id']));
+            }
+
             $res = $this->db2->update('screening_paper', $screening_save, array('screening_id' => $post_arr['screening_id']));
             $this->db_current->where('screening_id', $post_arr['screening_id'])->delete('screen_inclusion_mapping');
             if ($res == 1) {

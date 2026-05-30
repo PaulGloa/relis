@@ -31,12 +31,6 @@ function get_operations_paper() {
 			'tab_ref'=>'papers',
 			'operation_id'=>'list_excluded_papers'
 	);
-
-    $operations['list_flagged_related_papers']=array(
-        'type'=>'List',
-        'tab_ref'=>'papers',
-        'operation_id'=>'list_flagged_related_papers'
-    );
 	
 	$operations['list_papers_screen']=array(
 			'type'=>'List',
