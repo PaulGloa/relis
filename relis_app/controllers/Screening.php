@@ -2075,6 +2075,21 @@ class Screening extends CI_Controller
             }
             //print_test($data['screen_history']);
         }
+
+        $data['flag'] = '';
+        $flag_id_query = $this->db2->select('flag_category_id')
+            ->where('paper_id', $ref_id)
+            ->get('flag');
+        $flag_id = $flag_id_query->row_array();
+
+        if (!empty($flag_id)) {
+            $flag_query = $this->db2->select('ref_value')
+                ->where('ref_id', $flag_id['flag_category_id'])
+                ->get('ref_flag_category');
+            $flag = $flag_query->row_array();
+            $data['flag'] = $flag['ref_value'];
+        }
+
         /*
          * Création des boutons qui vont s'afficher en haut de la page (top_buttons)
          */
