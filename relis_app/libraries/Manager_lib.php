@@ -1421,7 +1421,10 @@ class Manager_lib
 		$menu['general']['menu']['papers']['sub_menu']['screen_paper_pending'] = array('label' => 'Pending', 'url' => 'element/entity_list/list_pending_papers', '');
 		$menu['general']['menu']['papers']['sub_menu']['screen_paper_included'] = array('label' => 'Included', 'url' => 'element/entity_list/list_included_papers', '');
 		$menu['general']['menu']['papers']['sub_menu']['screen_paper_excluded'] = array('label' => 'Excluded', 'url' => 'element/entity_list/list_excluded_papers', '');
-        $menu['general']['menu']['papers']['sub_menu']['screen_paper_flagged'] = array('label' => 'Flagged Papers', 'url' => 'element/entity_list/list_flagged_papers', '');
+
+        if ($this->CI->db_current->table_exists('flag')) {
+            $menu['general']['menu']['papers']['sub_menu']['screen_paper_flagged'] = array('label' => 'Flagged Papers', 'url' => 'element/entity_list/list_flagged_papers', '');
+        }
 
 		$menu['general']['menu']['venues'] = array('label' => 'Venues', 'url' => 'element/entity_list/list_venues', 'icon' => 'th');
 
@@ -1464,7 +1467,9 @@ class Manager_lib
             $menu['settings']['menu']['configuration']['sub_menu']['exclusioncrieria'] = array('label' => 'Exclusion Criteria', 'url' => 'element/entity_list/list_exclusioncrieria', 'icon' => '');
 			$menu['settings']['menu']['configuration']['sub_menu']['inclusioncrtieria'] = array('label' => 'Inclusion Criteria', 'url' => 'element/entity_list/list_inclusioncriteria', 'icon' => '');
 
-            $menu['settings']['menu']['configuration']['sub_menu']['flag_category'] = array('label' => 'Flag Categories', 'url' => 'element/entity_list/list_flag_category', 'icon' => '');
+            if ($this->CI->db_current->table_exists('flag')) {
+                $menu['settings']['menu']['configuration']['sub_menu']['flag_category'] = array('label' => 'Flags', 'url' => 'element/entity_list/list_flag_category', 'icon' => '');
+            }
 
 			$menu['settings']['menu']['configuration']['sub_menu']['papers_sources'] = array('label' => 'Papers Sources', 'url' => 'element/entity_list/list_papers_sources', 'icon' => '');
 			$menu['settings']['menu']['configuration']['sub_menu']['search_strategy'] = array('label' => 'Search Strategies', 'url' => 'element/entity_list/list_search_strategy', 'icon' => '');

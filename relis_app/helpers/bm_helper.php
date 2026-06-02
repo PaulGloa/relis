@@ -311,7 +311,6 @@ function input_textarea_bm($label, $name, $id, $value = "", $max = 100, $classe 
 */
 function dropdown_form_bm($label, $name, $id, $values = array(), $selected = 0, $classe = " ", $readonly = "")
 {
-
 	if (strpos($classe, 'mandatory')) {
 		$mandatory = '<span class="mandatory"> *</span>';
 		$classe = str_replace('mandatory', "", $classe);

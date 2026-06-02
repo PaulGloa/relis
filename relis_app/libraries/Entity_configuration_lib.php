@@ -82,7 +82,7 @@ class Entity_configuration_lib
 				break;
             case 'flag_category':
                 require_once("entity_config/references_configuration.php");
-                $table_configurations['flag_category'] = get_reference('ref_flag_category', 'Flag category', 'flag_category', 'Flag category');
+                $table_configurations['flag_category'] = get_reference('ref_flag_category', 'Flag', 'flag_category', 'Flag name');
 			case 'research_question':
 				require_once("entity_config/references_configuration.php");
 				$table_configurations['research_question'] = get_reference('research_question', 'Research question', 'research_question', 'Question');

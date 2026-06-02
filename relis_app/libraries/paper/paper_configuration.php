@@ -686,24 +686,6 @@ function get_papers()
 	unset($operations['list_pending_papers']['list_links']['delete']);
 	unset($operations['list_pending_papers']['list_links']['edit']);
 
-    $operations['list_flagged_related_papers'] = $operations['list_all_papers'];
-    $operations['list_flagged_related_papers']['page_title'] = 'Flagged Related papers';
-    $operations['list_flagged_related_papers']['data_source'] = 'get_list_flagged_related_papers';
-    $operations['list_flagged_related_papers']['conditions'] = array(
-        'flagged_related' => array(
-            'field' => 'flagged_related',
-            'value' => 1,
-            'evaluation' => 'equal',
-            'add_on_generation' => TRUE,
-            'parameter_type' => 'INT(1)'
-        )
-    );
-    unset($operations['list_flagged_related_papers']['top_links']['clear_logs']);
-    unset($operations['list_flagged_related_papers']['top_links']['add']);
-    unset($operations['list_flagged_related_papers']['top_links']['add_bibtex']);
-    unset($operations['list_flagged_related_papers']['list_links']['delete']);
-    unset($operations['list_flagged_related_papers']['list_links']['edit']);
-
 	$operations['list_included_papers'] = $operations['list_pending_papers'];
 	$operations['list_included_papers']['page_title'] = 'Included papers';
 	$operations['list_included_papers']['data_source'] = 'get_list_included_papers';

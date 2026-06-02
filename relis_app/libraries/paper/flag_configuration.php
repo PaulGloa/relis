@@ -70,7 +70,7 @@ function get_flags()
     );
 
     $fields['flag_category_id'] = array(
-        'field_title' => 'Flag Category',
+        'field_title' => 'Flag',
         'field_type' => 'int',
         'field_size' => 11,
         'input_type' => 'select',

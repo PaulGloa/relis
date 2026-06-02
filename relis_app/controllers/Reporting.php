@@ -98,12 +98,14 @@ class Reporting extends CI_Controller
 	//display the export options for the result data
 	public function result_export($type = 1)
 	{
+        $this->db2 = $this->load->database(project_db(), TRUE);
 		$data['t_type'] = $type;
 		$data['page_title'] = lng('Exports');
 		$data['top_buttons'] = get_top_button('back', 'Back', 'home');
 		$data['left_menu_perspective'] = 'z_left_menu_screening';
 		$data['project_perspective'] = 'screening';
 		$data['page'] = 'relis/result_export';
+        $data['flag_active'] = $this->db2->table_exists('flag');
 		/*
 		 * Chargement de la vue avec les données préparés dans le controleur suivant le type d'affichage : (popup modal ou pas)
 		 */
@@ -431,21 +433,21 @@ class Reporting extends CI_Controller
 		redirect('reporting/result_export');
 	}
 
-    public function result_export_papers_flagged_related()
+    public function result_export_flagged_papers()
     {
-        $table_ref = "papers";
+        $table_ref = "flags";
         $this->db2 = $this->load->database(project_db(), TRUE);
 
         $data = $this->Reporting_dataAccess->prepare_paper_export7();
 
         $result = $data->result_array();
-        $array_header = array('#', "key", 'Title', 'Link', 'Preview', 'Abstract', 'Year');
+        $array_header = array('#', "key", 'Title', 'Link', 'Preview', 'Abstract', 'Year', 'Flag');
         array_unshift($result, $array_header);
         try {
             // Create a stream opening it with read / write mode
-            $f_new = fopen("cside/export_r/relis_paper_flagged_related_" . project_db() . ".csv", 'w');
+            $f_new = fopen("cside/export_r/relis_flagged_papers_" . project_db() . ".csv", 'w');
             if (!$f_new) {
-                throw new Exception('Could not open file relis_paper_flagged_related_' . project_db() . ".csv");
+                throw new Exception('Could not open file relis_flagged_papers_' . project_db() . ".csv");
             }
             // Iterate over the data, writing each line to the text stream
             $i = 0;

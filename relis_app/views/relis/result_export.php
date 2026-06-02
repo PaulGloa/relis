@@ -44,7 +44,7 @@
 
 	              <?php
                 $paper_filename = FCPATH . "cside/export_r/relis_paper_" . project_db() . ".csv";
-                $paper_flagged_related_filename = FCPATH . "cside/export_r/relis_paper_flagged_related_" . project_db() . ".csv";
+                $flagged_papers_filename = FCPATH . "cside/export_r/relis_flagged_papers_" . project_db() . ".csv";
                 $paper_bib_filename = FCPATH . "cside/export_r/relis_paper_bibtex_" . project_db() . ".bib";
                 $paper_bib_filename_Included = FCPATH . "cside/export_r/relis_paper_bibtex_Included_" . project_db() . ".bib";
                 $paper_bib_filename_Excluded = FCPATH . "cside/export_r/relis_paper_bibtex_Excluded_" . project_db() . ".bib";
@@ -64,14 +64,14 @@
                   $paper_dsc = "";
                 }
 
-                if (file_exists($paper_flagged_related_filename)) {
-                    $paper_flagged_related_size = (filesize($paper_flagged_related_filename) > 1000 ? round(filesize($paper_flagged_related_filename) / 1000) : round(filesize($paper_flagged_related_filename) / 1000, 1)) . ' Kb  Last update:';
-                    $paper_flagged_related_date = date("Y-m-d h:i:s", filemtime($paper_flagged_related_filename));
+                if (file_exists($flagged_papers_filename)) {
+                    $flagged_papers_size = (filesize($flagged_papers_filename) > 1000 ? round(filesize($flagged_papers_filename) / 1000) : round(filesize($flagged_papers_filename) / 1000, 1)) . ' Kb  Last update:';
+                    $flagged_papers_date = date("Y-m-d h:i:s", filemtime($flagged_papers_filename));
 
-                    $paper_flagged_related_dsc = "<i class='fa fa-download'></i> Download CSV (" . $paper_flagged_related_size . $paper_flagged_related_date . ")";
+                    $flagged_papers_dsc = "<i class='fa fa-download'></i> Download CSV (" . $flagged_papers_size . $flagged_papers_date . ")";
                 } else {
 
-                    $paper_flagged_related_dsc = "";
+                    $flagged_papers_dsc = "";
                 }
 
                 if (file_exists($paper_bib_filename)) {
@@ -167,12 +167,17 @@
 	                  <td><a href="<?php echo base_url(); ?>reporting/download/relis_paper_<?php echo project_db(); ?>.csv"><?php echo  $paper_dsc ?></a></td>
 	                  <td><a href="<?php echo base_url(); ?>reporting/result_export_papers"><i class="fa fa-refresh"></i><?php echo lng('Update file') ?></a></td>
 	                </tr>
+                    <?php
+                    if ($flag_active) {
+                        echo '
                     <tr>
-                       <td>Papers Flagged Realted</td>
-                       <td><a href="<?php echo base_url(); ?>reporting/download/relis_paper_flagged_related_<?php echo project_db(); ?>.csv"><?php echo  $paper_flagged_related_dsc ?></a></td>
-                       <td><a href="<?php echo base_url(); ?>reporting/result_export_papers_flagged_related"><i class="fa fa-refresh"></i><?php echo lng('Update file') ?></a></td>
-                    </tr>
+                       <td>Flagged Papers</td>
+                       <td><a href="' . base_url() . 'reporting/download/relis_flagged_papers_' . project_db() . '.csv">' . $flagged_papers_dsc . '</a></td>
+                       <td><a href="' . base_url() . 'reporting/result_export_flagged_papers"><i class="fa fa-refresh"></i>' . lng("Update file") . ' </a></td>
+                    </tr>';
+                    }
 
+                    ?>
 	                <tr>
 	                  <td>Papers (BibTeX)</td>
 	                  <td><a href="<?php echo base_url(); ?>reporting/download/relis_paper_bibtex_<?php echo project_db(); ?>.bib"><?php echo  $paper_bib_dsc ?></a></td>

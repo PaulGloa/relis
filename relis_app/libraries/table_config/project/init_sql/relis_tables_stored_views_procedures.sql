@@ -87,7 +87,6 @@ CREATE TABLE IF NOT EXISTS `paper` (
   `preview` longtext,
   `paper_excluded` int(1) NOT NULL DEFAULT '0',
   `paper_active` int(1) NOT NULL DEFAULT '1',
-  `flagged_related` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IX_Paper_bibtexKey` (`bibtexKey`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;;;;

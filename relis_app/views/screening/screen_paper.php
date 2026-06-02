@@ -121,10 +121,6 @@
 
                                     <!-- <form class="form-horizontal" action="save_screening" method="POST" onsubmit=" return  validate_screen()"> -->
 
-                                    <?php echo checkbox_form_bm(label: 'Flag the paper', name: 'flagged_paper', id: 'flagged_paper', selected: $paper_is_flagged, on_change:'flagToggleUI()'); ?>
-                                    <div id="flag_dropdown_div" style="display: <?php echo $paper_is_flagged ? 'block' : 'none'; ?>;">
-                                        <?php echo dropdown_form_bm("Flag category", "flag_category", "flag_dropdown", $flags, selected: $flag_category)?>
-                                    </div>
                                     <br />
                                     <div style='text-align:center' class="screen_decision">
 
@@ -198,6 +194,15 @@
                                         <input type="hidden" name="inclusion_mode" id="inclusion_mode"
                                         value="<?php echo $inclusion_mode ?>" />
                                     <div class="ln_solid"></div>
+                                    <?php
+                                    if ($flag_active) {
+                                        echo '<div id="flag_dropdown_div">
+                                        '. dropdown_form_bm("Flag", "flag_category", "flag_dropdown", $flags, selected: $flag_category) . '
+                                        </div>
+                                        <div class="ln_solid"></div>';
+                                    }
+
+                                    ?>
                                     <div style='text-align:center'>
 
                                         <button class="btn btn-info btn-lg" type="submit">
@@ -240,13 +245,6 @@
 
                     <script>
                         function validate_screen() {
-                            const flag_checkbox = document.querySelector("#flagged_paper")
-                            const flag_dropdown = document.querySelector('#flag_dropdown')
-
-                            if (flag_checkbox.checked && $('#flag_dropdown').val() == '') {
-                                alert('You must select a flag category.')
-                                return false
-                            }
 
                             var inclusion_mode = '<? echo $inclusion_mode ?>';
                             if ($('#decision').val() == 'excluded' && $('#criteria_ex').val() == '') {
@@ -295,17 +293,6 @@
                             $('.exclusion_crit').show();
                             $('.inclusion_crit').hide();
                             $('#decision').val('excluded');
-                        }
-
-                        function flagToggleUI() {
-                            const checkbox = document.querySelector('#flagged_paper')
-                            const dropdown = document.querySelector('#flag_dropdown_div')
-
-                            if (checkbox.checked) {
-                                dropdown.style.display = 'block';
-                            } else {
-                                dropdown.style.display = 'none';
-                            }
                         }
 
                         <?php if (!empty($content_item) and $content_item['screening_decision'] == 'Included') { ?>
