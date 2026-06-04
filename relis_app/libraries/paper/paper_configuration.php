@@ -334,18 +334,6 @@ function get_papers()
 		'on_list' => 'hidden',
 	);
 
-
-    $fields['flagged_related'] = array(
-        'field_title' => 'Flagged Related',
-        'field_type' => 'int',
-        'field_size' => '1',
-        'field_value' => '0',
-        'default_value' => '0',
-        'input_type' => 'select',
-        'input_select_source' => 'yes_no',
-        'on_list' => 'hidden',
-    );
-
 	$config['fields'] = $fields;
 
 	/*
