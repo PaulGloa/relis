@@ -141,8 +141,8 @@ class ElementUnitTest
         $this->save_new_flag_category();
         $this->edit_flag_category();
         $this->delete_flag_category();
-        //$this->edit_flag();
-        //$this->delete_flag();
+        $this->edit_flag();
+        $this->delete_flag();
     }
 
     private function TestInitialize()
@@ -614,8 +614,6 @@ class ElementUnitTest
 
             //get entry in the db
             $data = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".classification WHERE class_id = 1")->row_array();
-            print_test($data);
-            exit;
             $paper = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".paper WHERE id = " . $data['class_paper_id'])->row_array();
             //check if entry is listed
             if (strstr($response['content'], $paper['title']) != false) {
@@ -1137,7 +1135,6 @@ class ElementUnitTest
         $actual_value = "No";
 
         $response = $this->http_client->response($this->controller, $action . "/list_excluded_papers");
-        error_log("reponse: " . print_r($response, true));
 
         if ($response['status_code'] >= 400) {
             $actual_value = "<span style='color:red'>" . $response['content'] . "</span>";
@@ -3967,8 +3964,8 @@ class ElementUnitTest
         if ($response['status_code'] >= 400) {
             $actual_value = "<span style='color:red'>" . $response['content'] . "</span>";
         } else {
-            $data = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".ref_flag_category WHERE ref_active = 1")->row_array();
-            if (!empty($data)) {
+            $data = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".ref_flag_category WHERE ref_id = " . $id)->row_array();
+            if ($data['ref_active'] == 0) {
                 $actual_value = 'Yes';
             }
         }
@@ -3995,7 +3992,7 @@ class ElementUnitTest
         $this->ci->db->query("INSERT INTO relis_dev_correct_" . getProjectShortName() . ".ref_flag_category (ref_value) VALUES ('test')");
         $flag_category_id = $this->ci->db->insert_id();
         $this->ci->db->query("INSERT INTO relis_dev_correct_" . getProjectShortName() . ".flag (paper_id, flag_category_id, added_by, flag_active) VALUES (1, " . $flag_category_id . ", 1, 1)");
-        $paper_id = $this->ci->db->insert_id();
+        $flag_id = $this->ci->db->insert_id();
         $this->ci->db->query("INSERT INTO relis_dev_correct_" . getProjectShortName() . ".ref_flag_category (ref_value) VALUES ('retest')");
         $flag_category_id = $this->ci->db->insert_id();
 
@@ -4010,7 +4007,7 @@ class ElementUnitTest
             'parent_id' => '',
             'parent_field' => '',
             'parent_table' => '',
-            'id' => $paper_id,
+            'id' => $flag_id,
             'flag_category_id' => $flag_category_id
         ];
 
@@ -4019,7 +4016,7 @@ class ElementUnitTest
         if ($response['status_code'] >= 400) {
             $actual_value = "<span style='color:red'>" . $response['content'] . "</span>";
         } else {
-            $result = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".flag WHERE paper_id = " . $paper_id . " AND flag_category_id = " . $flag_category_id . " AND flag_active = 1")->row_array();
+            $result = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".flag WHERE id = " . $flag_id . " AND flag_active = 1")->row_array();
             if (!empty($result)) {
                 $actual_value = "Yes";
             }
@@ -4048,15 +4045,15 @@ class ElementUnitTest
         $this->ci->db->query("INSERT INTO relis_dev_correct_" . getProjectShortName() . ".ref_flag_category (ref_value) VALUES ('test')");
         $flag_category_id = $this->ci->db->insert_id();
         $this->ci->db->query("INSERT INTO relis_dev_correct_" . getProjectShortName() . ".flag (paper_id, flag_category_id, added_by, flag_active) VALUES (1, " . $flag_category_id . ", 1, 1)");
-        $paper_id = $this->ci->db->insert_id();
+        $flag_id = $this->ci->db->insert_id();
 
-        $response = $this->http_client->response($this->controller, $action . "/remove_flag/" . $paper_id);
+        $response = $this->http_client->response($this->controller, $action . "/remove_flag/" . $flag_id);
 
         if ($response['status_code'] >= 400) {
             $actual_value = "<span style='color:red'>" . $response['content'] . "</span>";
         } else {
-            $data = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".flag WHERE paper_id = " . $paper_id . " AND flag_category_id = " . $flag_category_id . " AND flag_active = 1")->row_array();
-            if (empty($data)) {
+            $data = $this->ci->db->query("SELECT * FROM relis_dev_correct_" . getProjectShortName() . ".flag WHERE id = " . $flag_id)->row_array();
+            if ($data['flag_active'] == 0) {
                 $actual_value = 'Yes';
             }
         }
@@ -4067,6 +4064,3 @@ class ElementUnitTest
         run_test($this->controller, $action, $test_name, $test_aspect, $expected_value, $actual_value);
     }
 }
-
-
-

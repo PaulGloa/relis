@@ -708,7 +708,6 @@ class Element extends CI_Controller
          * Récuperation des valeurs soumis dans le formulaire
          */
         $post_arr = $this->input->post();
-        print_test($post_arr); exit;
         /*
          * Récupération de la configuration (structure ) de la table qui est concerné
          */

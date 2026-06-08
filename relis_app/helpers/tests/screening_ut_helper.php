@@ -65,7 +65,7 @@ class ScreeningUnitTest
         $this->removeScreeningValidation();
         $this->screening_4papersScreened();
         $this->screening_0paperScreened();
-        //$this->saveScreening_FlaggedPaper();
+        $this->saveScreening_FlaggedPaper();
     }
 
     private function TestInitialize()
@@ -2324,6 +2324,7 @@ class ScreeningUnitTest
         }
 
         $this->ci->db->query("DELETE FROM relis_dev_correct_" . getProjectShortName() . ".ref_flag_category");
+        $this->ci->db->query("DELETE FROM relis_dev_correct_" . getProjectShortName() . ".flag");
 
         run_test($this->controller, $action, $test_name, $test_aspect_screening, $expected_result, $actual_result);
     }
