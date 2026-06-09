@@ -136,8 +136,8 @@ class ElementUnitTest
         $this->remove_screen_phase();
         $this->remove_venue();
         $this->listAllFlaggedPapers();
-        $this->listAllFlaggedPapersEmpty();
-        $this->listAllFlaggedPapersInactiveFlag();
+        $this->listFlaggedPapersEmpty();
+        $this->listFlaggedPapersWithInactiveFlag();
         $this->save_new_flag_category();
         $this->edit_flag_category();
         $this->delete_flag_category();
@@ -3786,7 +3786,7 @@ class ElementUnitTest
      * Description : display the list of flagged related papers when none are flagged
      * Expected result: check if the list is empty when there is no flagged paper
      */
-    private function listAllFlaggedPapersEmpty()
+    private function listFlaggedPapersEmpty()
     {
         $action = "entity_list";
         $test_name = "display list of flagged papers when none are flagged";
@@ -3820,7 +3820,7 @@ class ElementUnitTest
      * Description : display list of all flagged related papers
      * Expected result: check if the flagged papers are listed
      */
-    private function listAllFlaggedPapersInactiveFlag()
+    private function listFlaggedPapersWithInactiveFlag()
     {
         $action = "entity_list";
         $test_name = "display list of flagged papers with 1 inactive flag";

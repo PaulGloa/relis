@@ -604,7 +604,7 @@ articles','ReLiS allows you to manually add references or import a list from CSV
         the project according to the configured protocol.</p>
 
     <h4><strong>Decision Panel</strong></h4>
-    <p><img width="90%" height="520" src="http://localhost:8083/cside/images/screening_decision_panel_illustration.png" alt="Screening Decision Panel Illustration"></p>
+    <p><img width="90%" height="520" src="http://relis.iro.umontreal.ca/cside/images/screening_decision_panel_illustration.png" alt="Screening Decision Panel Illustration"></p>
 
     <ul>
         <li><strong>Included:</strong> The paper meets the preliminary research criteria. Selecting an inclusion
@@ -621,7 +621,7 @@ articles','ReLiS allows you to manually add references or import a list from CSV
     </ul>
 
     <h4><strong>Paper Tracking (Sidebar Navigation)</strong></h4>
-    <p><img width="90%" height="520" src="http://localhost:8083/cside/images/papers_menu.png" alt="Papers Menu Navigation"></p>
+    <p><img width="90%" height="520" src="http://relis.iro.umontreal.ca/cside/images/papers_menu.png" alt="Papers Menu Navigation"></p>
     <p>The Papers dropdown menu in the sidebar provides categorized views to monitor and browse articles based on their
         current status in the pipeline:</p>
 
@@ -635,7 +635,7 @@ articles','ReLiS allows you to manually add references or import a list from CSV
     </ul>
 
     <h4><strong>Flags Management</strong></h4>
-    <p><img width="90%" height="520" src="http://localhost:8083/cside/images/flags_view.png" alt="Flags View"></p>
+    <p><img width="90%" height="520" src="http://relis.iro.umontreal.ca/cside/images/flags_view.png" alt="Flags View"></p>
     <p>The Flags view allows to manage the flags.</p>
     <p>Note that a flag can only be deleted if no papers are currently tagged with it.</p>
     <hr>\r\n
