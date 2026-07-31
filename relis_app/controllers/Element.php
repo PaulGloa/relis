@@ -1128,6 +1128,9 @@ class Element extends CI_Controller
      */
     public function entity_list($operation_name, $val = "_", $page = 0, $dynamic_table = 1)
     {
+        if ($operation_name == 'list_screen_phases' && $this->db_current->field_exists('next_phase', 'screen_phase')) {
+            redirect('screen_phases/display_phases');
+        }
         $project_published = project_published();
         //print_test($project_published);
         $op = check_operation($operation_name, 'List');
@@ -1457,7 +1460,6 @@ class Element extends CI_Controller
         }
         if (admin_config($ref_table))
             $data['left_menu_admin'] = True;
-        //print_test($data);
         /*
          * Chargement de la vue avec les données préparés dans le controleur
          * Loading the view with the data prepared in the controller

@@ -84,6 +84,9 @@ class ScreeningUnitTest
         createDemoProject();
         $this->ci->db->query("INSERT INTO relis_dev_correct_" . getProjectShortName() . ".screen_phase_config(screen_phase_id) values(1)");
 
+        // tests for the old phases system
+        $this->ci->db->query("ALTER TABLE relis_dev_correct_" . getProjectShortName() . ".screen_phase DROP `next_phase`");
+
         //add users to test Project
         addUserToProject(getAdminUserId(), "Reviewer");
         addUserToProject(getTestUserId(), "Reviewer");
@@ -1948,7 +1951,7 @@ class ScreeningUnitTest
      * Test 40
      * Action : save_assign_screen_validation
      * Description : save the assignments of papers for screening validation with 100% of paper assignement.
-     * Expected Paper assignements : 
+     * Expected Paper assignements :
      *          - 100% of the papers are added in the project DB in screening_paper table
      *          - assign_papers_valida operation inserted in operations table in the project DB
      */
@@ -2251,7 +2254,7 @@ class ScreeningUnitTest
         $test_aspect = "is data correct";
         $expected_value = "Correct";
         $actual_value = "Not Correct";
-        
+
         //initialise the Database
         $this->TestInitialize();
         //add 5 papers to test Project

@@ -177,6 +177,9 @@ class ElementUnitTest
         //perform classification
         assignPapersForClassification([getAdminUserId(), getTestUserId()]);
         performClassification();
+
+        // tests for the old phases system
+        $this->ci->db->query("ALTER TABLE relis_dev_correct_" . getProjectShortName() . ".screen_phase DROP `next_phase`");
     }
 
     /*
@@ -1673,6 +1676,7 @@ class ElementUnitTest
 
             //check if all entries are listed
             $entriesListed = [];
+
             foreach ($data as $dt) {
                 if (strstr($response['content'], $dt['phase_title']) != false) {
                     array_push($entriesListed, $dt);
@@ -2593,7 +2597,8 @@ class ElementUnitTest
             'bibtex' => '',
             'abstract' => '',
             'papers_sources' => '',
-            'search_strategy' => ''
+            'search_strategy' => '',
+            'imported_in_phase' => 1
         ];
 
         $response = $this->http_client->response($this->controller, $action, $postData, "POST");

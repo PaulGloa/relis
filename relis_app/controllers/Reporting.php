@@ -448,7 +448,7 @@ class Reporting extends CI_Controller
             if (!$memoryStream) {
                 throw new Exception('Could not open memory stream');
             }
-            
+
             $i = 0;
             foreach ($result as $val) {
                 if ($i > 0) {
